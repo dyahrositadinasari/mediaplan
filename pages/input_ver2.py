@@ -4,9 +4,9 @@ import pandas as pd
 from datetime import date
 
 # Load CSV
-df_client = pd.read_csv("client_list.csv")
-df_mt = pd.read_csv("MediaType_list.csv")
-df_vendor = pd.read_csv("vendor_list.csv")
+df_client = pd.read_csv("mediaplan/client_list.csv")
+df_mt = pd.read_csv("mediaplan/MediaType_list.csv")
+df_vendor = pd.read_csv("mediaplan/vendor_list.csv")
 
 # SQLite Init
 conn = sqlite3.connect("mediaplan.db")
