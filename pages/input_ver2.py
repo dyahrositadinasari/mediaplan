@@ -52,7 +52,7 @@ MEDIA_MAP = {
     },
 }
 
-st.title("📋 Mediapan Mock-Up (Compact UI)")
+st.title("📋 Mediapan Mock-Up")
 
 tabs = st.tabs(["➕ Input", "📁 Dataset"])
 
