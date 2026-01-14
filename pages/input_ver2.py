@@ -24,7 +24,8 @@ CREATE TABLE mediaplan (
     start_date TEXT,
     end_date TEXT,
     created_at TEXT,
-    updated_at TEXT
+    updated_at TEXT,
+    notes TEXT
 )
 """)
 
