@@ -4,6 +4,36 @@ import pandas as pd
 from datetime import date
 import os
 
+conn = sqlite3.connect("mediaplan.db", check_same_thread=False)
+cursor = conn.cursor()
+
+# ⚠️ Drop table untuk dev/testing
+cursor.execute("DROP TABLE IF EXISTS mediaplan")
+
+cursor.execute("""
+CREATE TABLE mediaplan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client TEXT,
+    pod TEXT,
+    media_type TEXT,
+    media_subtype TEXT,
+    vendor TEXT,
+    format TEXT,
+    kpi TEXT,
+    budget REAL,
+    start_date TEXT,
+    end_date TEXT,
+    created_at TEXT,
+    updated_at TEXT
+)
+""")
+
+conn.commit()
+
+
+
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Load CSV
