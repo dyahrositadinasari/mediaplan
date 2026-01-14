@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 
 # --- DB init ---
 conn = sqlite3.connect("mediaplan.db")
@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS mediaplan (
 """)
 conn.commit()
 
-# --- Mapping ---
 MEDIA_MAP = {
     "Digital": {
         "Facebook": ["Feed", "Video", "Stories"],
@@ -53,26 +52,28 @@ MEDIA_MAP = {
     },
 }
 
-st.title("📋 Mediapan Mock-Up App")
+st.title("📋 Mediapan Mock-Up (Compact UI)")
 
 tabs = st.tabs(["➕ Input", "📁 Dataset"])
 
+
 # --- TAB INPUT ---
 with tabs[0]:
-    st.subheader("Add Mediapan Entry")
+    client = st.text_input("Client")
 
-    client = st.text_input("Client Name")
-    media = st.selectbox("Media", list(MEDIA_MAP.keys()))
+    row1 = st.columns([1,1,1,1])
+    media = row1[0].selectbox("Media", list(MEDIA_MAP.keys()))
+    channel = row1[1].selectbox("Channel", list(MEDIA_MAP[media].keys()))
+    format_ = row1[2].selectbox("Format", MEDIA_MAP[media][channel])
+    notes = row1[3].text_input("Notes")
 
-    channel = st.selectbox("Channel", list(MEDIA_MAP[media].keys()))
-    format_ = st.selectbox("Format", MEDIA_MAP[media][channel])
+    row2 = st.columns([1,1,1,1])
+    budget = row2[0].number_input("Budget", min_value=0.0)
+    start_date = row2[1].date_input("Start Date", value=date.today())
+    end_date = row2[2].date_input("End Date", value=date.today())
+    submit = row2[3].button("Submit", type="primary")
 
-    budget = st.number_input("Budget", min_value=0.0)
-    start_date = st.date_input("Start Date", date.today())
-    end_date = st.date_input("End Date", date.today())
-    notes = st.text_area("Notes (optional)")
-
-    if st.button("Submit"):
+    if submit:
         c.execute("""
             INSERT INTO mediaplan (client, media, channel, format, budget, start_date, end_date, notes)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -80,10 +81,9 @@ with tabs[0]:
         conn.commit()
         st.success("Data submitted!")
 
-# --- TAB DATASET ---
-with tabs[1]:
-    st.subheader("Editable Dataset")
 
+# --- TAB DATASET (Editable) ---
+with tabs[1]:
     df = pd.read_sql_query("SELECT * FROM mediaplan", conn)
 
     edited_df = st.data_editor(
@@ -95,6 +95,5 @@ with tabs[1]:
     if st.button("Save Changes"):
         c.execute("DELETE FROM mediaplan")
         conn.commit()
-
-        edited_df.to_sql("mediaplan", conn, if_exists='append', index=False)
-        st.success("Database updated!")
+        edited_df.to_sql("mediaplan", conn, if_exists="append", index=False)
+        st.success("Saved!")
