@@ -13,6 +13,12 @@ df_vendor = pd.read_csv("vendor_list.csv")
 
 # SQLite Init
 conn = sqlite3.connect("mediaplan.db")
+conn.execute("ALTER TABLE mediaplan ADD COLUMN pod TEXT")
+conn.commit()
+conn.close()
+
+
+conn = sqlite3.connect("mediaplan.db")
 c = conn.cursor()
 c.execute("""
 CREATE TABLE IF NOT EXISTS mediaplan (
